@@ -17,7 +17,7 @@ final class CounterpartyService
 	{
 	}
 
-	public function createCounterpartyFor(User $user, SaveCounterpartyDto $dto)
+	public function createCounterpartyFor(User $user, SaveCounterpartyDto $dto): Counterparty
 	{
 		$counterparty = new Counterparty();
 		$counterparty->inn = $dto->inn;
