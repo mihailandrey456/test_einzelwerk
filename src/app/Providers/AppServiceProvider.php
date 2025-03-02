@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(DadataClient::class, function(Application $app) {
+        $this->app->bind(DadataClient::class, function (Application $app) {
             return new DadataClient(config('services.dadata.token'), config('services.dadata.secret'));
         });
     }

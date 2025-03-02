@@ -11,25 +11,25 @@ use Illuminate\Validation\ValidationException;
 
 final class AuthService
 {
-	private const TOKEN_NAME = "API";
+    private const TOKEN_NAME = "API";
 
-	public function register(RegisterUserDto $dto): void
-	{
-		$user = new User();
-		$user->name = $dto->name;
-		$user->email = $dto->email;
-		$user->password = Hash::make($dto->password);
-		$user->saveOrFail();
-	}
+    public function register(RegisterUserDto $dto): void
+    {
+        $user = new User();
+        $user->name = $dto->name;
+        $user->email = $dto->email;
+        $user->password = Hash::make($dto->password);
+        $user->saveOrFail();
+    }
 
-	public function getToken(GetTokenDto $dto): string
-	{
-		$user = User::firstWhere('email', $dto->email);
-		if (!$user || !Hash::check($dto->password, $user->password)) {
-			throw ValidationException::withMessages([
-				'email' => ['Неверный email или пароль']
-			]);
-		}
-		return $user->createToken(self::TOKEN_NAME)->plainTextToken;
-	}
+    public function getToken(GetTokenDto $dto): string
+    {
+        $user = User::firstWhere('email', $dto->email);
+        if (!$user || !Hash::check($dto->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Неверный email или пароль']
+            ]);
+        }
+        return $user->createToken(self::TOKEN_NAME)->plainTextToken;
+    }
 }

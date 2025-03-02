@@ -10,10 +10,9 @@ use OpenApi\Attributes as OAT;
 
 class AuthController extends Controller
 {
-    function __construct(
+    public function __construct(
         private readonly AuthService $service
-    )
-    {
+    ) {
     }
 
     #[OAT\Post(path: '/api/auth/register', tags: ['auth'], operationId: 'register', summary: 'register user')]
