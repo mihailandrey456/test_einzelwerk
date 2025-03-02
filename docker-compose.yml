@@ -16,12 +16,11 @@ services:
 
   nginx:
     image: nginx:1.27.4
-    command: /bin/bash -c "envsubst '$$NGINX_PORT $$NGINX_ROOT $$PHP_HOST $$PHP_PORT' < /etc/nginx/site.conf.tmpl > /etc/nginx/sites-available/site.conf && nginx -g 'daemon off;'"
+    command: /bin/bash -c "envsubst '$$NGINX_ROOT $$PHP_HOST $$PHP_PORT' < /etc/nginx/site.conf.tmpl > /etc/nginx/sites-available/site.conf && nginx -g 'daemon off;'"
     restart: always
     ports: 
-      - ${NGINX_PORT}:${NGINX_PORT}
+      - ${NGINX_PORT}:80
     environment:
-      - NGINX_PORT=${NGINX_PORT}
       - NGINX_ROOT=${APP_PATH}
       - PHP_HOST=${PHP_HOST}
       - PHP_PORT=${PHP_PORT}
@@ -54,6 +53,15 @@ services:
     working_dir: ${APP_PATH}
     volumes:
       - ${SOURCE_PATH}:${APP_PATH}
+
+  swaggerui:
+    image: docker.swagger.io/swaggerapi/swagger-ui
+    restart: always
+    ports:
+      - ${SWAGGERUI_PORT}:80
+    environment:
+      - PORT=80
+      - SWAGGER_JSON_URL=http://localhost:${NGINX_PORT}/api/openapi
 
 volumes:
   db:

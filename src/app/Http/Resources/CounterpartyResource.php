@@ -4,7 +4,18 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OAT;
 
+#[OAT\Schema(
+    title: 'Counterpary',
+    properties: [
+        new OAT\Property(property: 'id', type: 'int'),
+        new OAT\Property(property: 'inn', type: 'string'),
+        new OAT\Property(property: 'name', type: 'string'),
+        new OAT\Property(property: 'ogrn', type: 'string'),
+        new OAT\Property(property: 'address', type: 'string'),
+    ]
+)]
 class CounterpartyResource extends JsonResource
 {
     /**

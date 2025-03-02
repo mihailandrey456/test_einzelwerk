@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'openapi' => [
+            'driver' => 'local',
+            'root' => storage_path('openapi'),
+            'serve' => true,
+            'throw' => false,
+            'report' => false,
+        ],
     ],
 
     /*
