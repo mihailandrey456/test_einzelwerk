@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
     links:
-      - db:${MYSQL_HOST}
+      - db:${POSTGRES_HOST}
 
   nginx:
     image: nginx:1.27.4
@@ -36,17 +36,16 @@ services:
       - ./etc/nginx/site.conf.tmpl:/etc/nginx/site.conf.tmpl:ro
 
   db:
-    image: mysql:9.2.0
+    image: postgres:17.4-alpine3.21
     restart: always
     expose:
-      - ${MYSQL_PORT}
+      - ${POSTGRES_PORT}
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - db:/var/lib/mysql
+      - db:/var/lib/postgresql/data
 
   node:
     image: node:23-alpine3.20
