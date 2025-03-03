@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Test Einzelwerk</title>
 
-	@vite('resources/js/app.js')
+	@vite(['resources/js/app.js', 'resources/css/app.css'])
 	@inertiaHead
 </head>
 <body>

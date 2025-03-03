@@ -1,34 +1,74 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
-import { reactive } from 'vue'
-import { router } from '@inertiajs/vue3'
+import Layout from './Layout.vue'
+import { router, Link } from '@inertiajs/vue3'
+import { Button } from '@/components/ui/button'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormDescription,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+
+const formSchema = toTypedSchema(z.object({
+  email: z.string().email(),
+  password: z.string(),
+}))
 
 defineProps({ errors: Object })
 
-const form = reactive({
-  email: null,
-  password: null
+const form = useForm({
+  validationSchema: formSchema,
 })
 
-function submit() {
-  router.post('/login', form)
-}
+const onSubmit = form.handleSubmit((values) => {
+  router.post('/login', values)
+})
 </script>
 
 <template>
-    <Head title="Login" />
-    <h1>Login</h1>
-    <form @submit.prevent="submit">
-    	<div>
-		    <label for="email">Email:</label>
-		    <input id="email" v-model="form.email" />
-		    <div v-if="errors.email">{{ errors.email }}</div>
-    	</div>
-    	<div>
-		    <label for="password">Password:</label>
-		    <input id="password" v-model="form.password" />
-		    <div v-if="errors.password">{{ errors.password }}</div>
-    	</div>
-	    <button type="submit">Submit</button>
-	</form>
+  <Layout>
+    <template #header>
+      <h1 class="mt-2">Вход в аккаунт</h1>
+    </template>
+
+    <form @submit.prevent="onSubmit">
+      <div class="w-full mt-4">
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input placeholder="example@einzelwerk.ru" v-bind="componentField"></Input>
+            </FormControl>
+            <!-- todo: Записывать ошибки, возвращенные по api тоже в FormMessage -->
+            <FormDescription v-if="errors.email">{{ errors.email }}</FormDescription>
+            <FormMessage/>
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="w-full mt-4">
+        <FormField v-slot="{ componentField }" name="password">
+          <FormItem>
+            <FormLabel>Пароль</FormLabel>
+            <FormControl>
+              <Input type="password" placeholder="*****" v-bind="componentField"></Input>
+            </FormControl>
+            <!-- todo: Записывать ошибки, возвращенные по api тоже в FormMessage -->
+            <FormDescription v-if="errors.password">{{ errors.password }}</FormDescription>
+            <FormMessage/>
+          </FormItem>
+        </FormField>
+      </div>
+      <Button type="submit" class="w-full mt-4">Войти</Button>
+   </form>
+
+   <template #footer>
+     Нет аккаунта? <Link href="/register" class="underline">Зарегистрироваться</Link>
+   </template>
+  </Layout>
 </template>
