@@ -1,7 +1,17 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
 import { reactive, useTemplateRef } from 'vue'
 import { router, useForm } from '@inertiajs/vue3'
+import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
 
 defineProps({ data: Object, errors: Object })
 
@@ -27,44 +37,58 @@ function closeModal() {
 </script>
 
 <template>
-    <Head title="Counterparties" />
-    
     <template v-if="data.data.length">
-    	<button @click="dialog.showModal()">Добавить</button>
-	    <h1>Добавленные контрагенты</h1>
-	    <table>
-	    	<tr>
-	    		<th>ИНН</th>
-	    		<th>Наименование</th>
-	    		<th>ОГРН</th>
-	    		<th>Адрес</th>
-	    	</tr>
-	    	<tr v-for="item in data.data">
-	    		<td>{{ item.inn }}</td>
-	    		<td>{{ item.name }}</td>
-	    		<td>{{ item.ogrn }}</td>
-	    		<td>{{ item.address }}</td>
-	    	</tr>
-	    </table>
+    	<div class="m-10">
+	    	<div class="flex justify-between">
+				<p class="text-2xl">Добавленные контрагенты</p>
+	      		<Button @click="dialog.showModal()" class="w-min">Добавить</Button>
+	    	</div>
+		    <Table class="border mt-4">
+		    	<TableHeader>
+		    		<TableRow>
+		    			<TableHead>ИНН</TableHead>
+		    			<TableHead>Наименование</TableHead>
+		    			<TableHead>ОГРН</TableHead>
+		    			<TableHead>Адрес</TableHead>
+		    		</TableRow>
+		    	</TableHeader>
+		    	<TableBody>
+		    		<TableRow v-for="item in data.data">
+		    			<TableCell>{{ item.inn }}</TableCell>
+		    			<TableCell>{{ item.name }}</TableCell>
+		    			<TableCell>{{ item.ogrn }}</TableCell>
+		    			<TableCell>{{ item.address }}</TableCell>
+		    		</TableRow>
+		    	</TableBody>
+		    </Table>
+    	</div>
     </template>
     
     <template v-else>
-    	<h1>Контрагенты еще не добавлены</h1>
-    	<h2>Добавьте первого контрагента</h2>
-    	<button @click="dialog.showModal()">Добавить</button>
+    	<div class="flex flex-col justify-center items-center text-center min-h-screen">
+	    	<div>
+				<p class="text-2xl">Контрагенты еще не добавлены</p>
+	    	</div>
+	    	<div>
+		    	<p class="text-xl">Добавьте первого контрагента</p>
+	    	</div>
+	      	<Button @click="dialog.showModal()" class="mt-4 w-min">Добавить</Button>
+    	</div>
     </template>
 
     <dialog ref="dialog">
-    	<form @submit.prevent="submit">
-	    	<button type="button" autofocus @click="closeModal()">X</button>
-	    	<h2>Добавление контрагента</h2>
-	    	<h3>Введите ИНН, чтобы добавить контрагента</h3>
-	    	<div>
-		    	<input name="inn" v-model="form.inn" placeholder="ИНН">
-			    <div v-if="errors.inn">{{ errors.inn }}</div>
-	    	</div>
-	    	<h3>После нажатия на кнопку «Добавить», данные автоматически подгрузятся в таблицу</h3>
-	    	<button type="submit">Добавить</button>
-    	</form>
+    	<div class="m-3">
+	    	<form @submit.prevent="submit" class="flex flex-col">
+		    	<span class="self-end" autofocus @click="closeModal()">X</span>
+				<p class="text-xl">Добавление контрагента</p>
+				<p class="text-sm">Введите ИНН, чтобы добавить контрагента</p>
+		    	<div class="mt-4">
+		    		<Input placeholder="ИНН" name="inn" v-model="form.inn"></Input>
+				    <div v-if="errors.inn">{{ errors.inn }}</div>
+		    	</div>
+				<p class="text-sm mt-4">После нажатия на кнопку «Добавить», данные автоматически подгрузятся в таблицу</p>
+		      	<Button type="submit" class="mt-4 w-min self-end">Добавить</Button>
+	    	</form>
+    	</div>
     </dialog>
 </template>
