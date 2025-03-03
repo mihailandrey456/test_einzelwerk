@@ -2,6 +2,7 @@ build:
 	docker compose build $(c)
 	make install-dependencies
 	docker compose run --rm php php artisan key:generate
+	docker compose run --rm node npm run build
 	make create-openapi
 init-env:
 	cp .env.example .env

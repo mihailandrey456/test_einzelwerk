@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\UndefinedInnException;
 use App\Services\CounterpartyService;
-use App\Models\User;
-use App\Http\Requests\SaveCounterpartyRequest;
 use App\Http\Resources\CounterpartyResource;
+use App\Http\Requests\SaveCounterpartyRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Exception;
-use App\Exceptions\DomainException;
-use OpenApi\Attributes as OAT;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CounterpartyController extends Controller
@@ -20,8 +17,22 @@ class CounterpartyController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Counterparty/Index');
+        return Inertia::render('Counterparty/Index', [
+            'data' => CounterpartyResource::collection($request->user()->counterparties)
+        ]);
+    }
+
+    public function store(SaveCounterpartyRequest $request)
+    {
+        try {
+            $this->service->createCounterpartyFor($request->user(), $request->toDto());
+        } catch (UndefinedInnException $e) {
+            throw ValidationException::withMessages([
+                'inn' => [$e->getMessage()]
+            ]);
+        }
+        return to_route('counterparties.index');
     }
 }

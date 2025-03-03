@@ -16,4 +16,5 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth:sanctum')->get('/', [CounterpartyController::class, 'index']);
 Route::prefix('/counterparties')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [CounterpartyController::class, 'index'])->name('counterparties.index');
+    Route::post('/', [CounterpartyController::class, 'store']);
 });
