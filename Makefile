@@ -18,5 +18,6 @@ fix-code:
 	docker compose run --rm php ./vendor/bin/php-cs-fixer fix app
 install-dependencies:
 	docker compose run --rm php composer install
+	docker compose run --rm node npm install
 migrate:
 	docker compose run --rm php php artisan migrate

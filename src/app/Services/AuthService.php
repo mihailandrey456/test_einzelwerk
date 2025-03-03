@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Dto\GetTokenDto;
 use App\Dto\RegisterUserDto;
+use App\Dto\LoginDto;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,5 +32,10 @@ final class AuthService
             ]);
         }
         return $user->createToken(self::TOKEN_NAME)->plainTextToken;
+    }
+
+    public function attemptLogin(LoginDto $dto): bool
+    {
+        return Auth::attempt(['email' => $dto->email, 'password' => $dto->password]);
     }
 }
